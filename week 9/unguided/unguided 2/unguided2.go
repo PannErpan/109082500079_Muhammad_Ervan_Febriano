@@ -6,72 +6,39 @@ import (
 )
 
 func main() {
-	var n int
-	fmt.Scan(&n)
+	var x, y int
+	fmt.Scan(&x, &y)
 
-	arr := make([]int, n)
-	for i := 0; i < n; i++ {
-		fmt.Scan(&arr[i])
+	berat := make([]float64, x)
+	for i := 0; i < x; i++ {
+		fmt.Scan(&berat[i])
 	}
 
-	fmt.Println(arr)
+	jumlahWadah := int(math.Ceil(float64(x) / float64(y)))
 
-	for i := 0; i < n; i++ {
-		if i%2 == 1 {
-			fmt.Print(arr[i], " ")
+	totalPerWadah := make([]float64, jumlahWadah)
+	grandTotal := 0.0
+
+	for w := 0; w < jumlahWadah; w++ {
+		mulai := w * y
+		akhir := mulai + y
+		if akhir > x {
+			akhir = x
 		}
+		for i := mulai; i < akhir; i++ {
+			totalPerWadah[w] += berat[i]
+		}
+		grandTotal += totalPerWadah[w]
+	}
+
+	for w := 0; w < jumlahWadah; w++ {
+		if w > 0 {
+			fmt.Print(" ")
+		}
+		fmt.Printf("%.2f", totalPerWadah[w])
 	}
 	fmt.Println()
 
-	for i := 0; i < n; i++ {
-		if i%2 == 0 {
-			fmt.Print(arr[i], " ")
-		}
-	}
-	fmt.Println()
-
-	var x int
-	fmt.Scan(&x)
-	if x != 0 {
-		for i := 0; i < n; i++ {
-			if i%x == 0 {
-				fmt.Print(arr[i], " ")
-			}
-		}
-	}
-	fmt.Println()
-
-	var idx int
-	fmt.Scan(&idx)
-	if idx >= 0 && idx < len(arr) {
-		arr = append(arr[:idx], arr[idx+1:]...)
-	}
-	fmt.Println(arr)
-
-	if len(arr) > 0 {
-		sum := 0
-		for _, v := range arr {
-			sum += v
-		}
-		mean := float64(sum) / float64(len(arr))
-		fmt.Println(mean)
-
-		var total float64
-		for _, v := range arr {
-			total += math.Pow(float64(v)-mean, 2)
-		}
-		fmt.Println(math.Sqrt(total / float64(len(arr))))
-	} else {
-		fmt.Println(0)
-		fmt.Println(0)
-	}
-
-	var cari, count int
-	fmt.Scan(&cari)
-	for _, v := range arr {
-		if v == cari {
-			count++
-		}
-	}
-	fmt.Println(count)
+	rataRata := grandTotal / float64(jumlahWadah)
+	fmt.Printf("%.2f\n", rataRata)
 }

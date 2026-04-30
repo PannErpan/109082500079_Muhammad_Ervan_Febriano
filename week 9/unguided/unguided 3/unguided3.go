@@ -1,40 +1,45 @@
 package main
-
 import "fmt"
 
+type arrBalita [100]float64
+func hitungMinMax(arrBerat arrBalita, n int, bMin, bMax *float64) {
+	*bMin = arrBerat[0]
+	*bMax = arrBerat[0]
+	for i := 1; i < n; i++ {
+		if arrBerat[i] < *bMin {
+			*bMin = arrBerat[i]
+		}
+		if arrBerat[i] > *bMax {
+			*bMax = arrBerat[i]
+		}
+	}
+}
+
+func rerata(arrBerat arrBalita, n int) float64 {
+	total := 0.0
+	for i := 0; i < n; i++ {
+		total += arrBerat[i]
+	}
+	return total / float64(n)
+}
+
 func main() {
-	var klubA, klubB string
-	fmt.Print("Klub A: ")
-	fmt.Scan(&klubA)
-	fmt.Print("Klub B: ")
-	fmt.Scan(&klubB)
+	var arrBerat arrBalita
+	var n int
 
-	var skorA, skorB int
-	hasil := []string{}
-	i := 1
+	fmt.Print("Masukan banyak data berat balita : ")
+	fmt.Scan(&n)
 
-	for {
-		fmt.Printf("Pertandingan %d: ", i)
-		fmt.Scan(&skorA, &skorB)
-
-		if skorA < 0 || skorB < 0 {
-			break
-		}
-
-		if skorA > skorB {
-			hasil = append(hasil, klubA)
-		} else if skorB > skorA {
-			hasil = append(hasil, klubB)
-		} else {
-			hasil = append(hasil, "Draw")
-		}
-
-		i++
+	for i := 0; i < n; i++ {
+		fmt.Printf("Masukan berat balita ke-%d: ", i+1)
+		fmt.Scan(&arrBerat[i])
 	}
 
-	for j := 0; j < len(hasil); j++ {
-		fmt.Printf("Hasil %d : %s\n", j+1, hasil[j])
-	}
+	var bMin, bMax float64
+	hitungMinMax(arrBerat, n, &bMin, &bMax)
+	rataRata := rerata(arrBerat, n)
 
-	fmt.Println("Pertandingan selesai")
+	fmt.Printf("Berat balita minimum: %.2f kg\n", bMin)
+	fmt.Printf("Berat balita maksimum: %.2f kg\n", bMax)
+	fmt.Printf("Rerata berat balita: %.2f kg\n", rataRata)
 }

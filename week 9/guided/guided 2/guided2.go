@@ -2,39 +2,74 @@ package main
 
 import "fmt"
 
-func main(){
-	//deklarasi map bernama nilai dengan key string dan value integer
-	var nilai map[string]int = make(map[string]int)
+type mahasiswa struct {
+	nama string
+	nim  string
+	IPK  float64
+}
 
-	//menambahkan 2 data kedalam map data 1 (key = Dhimas, value = 90), data 2 (key = Ichya, value = 90)
-	nilai["Dhimas"] = 90
-	nilai["Ichya"] = 90
+type arrMahasiswa [3]mahasiswa
 
-	//menampilkan seluruh isi map menggunakan perulangan for
-	fmt.Println("Data nilai : ")
-	var nama string //variabel bantuan yang merujuk ke key 
-	var grade int //variabel bantuan yang merujuk ke value
-	//perulangan untuk pencarian (narasikan = untuk setiap nama (key) & grade (value) didalam range map nilai, maka tampilkan nama = nilai)
-	for nama, grade = range nilai {
-		fmt.Println(nama, " = ", grade)
+func IPKTerbesar(array []mahasiswa) (mahasiswa, int) {
+	var mhsTerbesar mahasiswa = array[0]
+	var idxDitemukan int = 0
+	var i int
+
+	for i = 1; i < len(array); i++ {
+		if array[i].IPK > mhsTerbesar.IPK {
+			mhsTerbesar = array[i]
+			idxDitemukan = i
+		}
 	}
 
-	//operasi update (mengupdate value yang memiliki key Ichya)
-	nilai["Ichya"] = 80
+	return mhsTerbesar, idxDitemukan
+}
 
-	//operasi searching
-	var cariNama string = "hafizh" //variabek bantuan yang menyimpan data key (nama) yang akan dicari
-	var isiData int //vaiabel bantuan yang merujuk ke value
-	var ok bool //vaiabel bantuan untuk pengecekan true/false (boolean)
-	//mencari key (cariNama) didalam map nilai dan mengambil valuenya (disimpan ke isiData) dan menandakan data sudah ditemukan (TRUE ke ok)
-	isiData, ok = nilai[cariNama] 
-	//pengecekan apakah data sudah ditemukan
-	if ok { //jika ok bernilai true, maka tampilkan hasil searching nya (nilai cariNama = isiData)
-		fmt.Println("Nilai", cariNama, " = ", isiData)
-	} else { //jika ok bernilai false, maka tampilkan teks data tidak ditemukan
-		fmt.Println("Data tidak ditemukan")
+func IPKTerkecil(array []mahasiswa) (mahasiswa, int) {
+	var mhsTerkecil mahasiswa = array[0]
+	var idxDitemukan int = 0
+	var i int
+
+	for i = 1; i < len(array); i++ {
+		if array[i].IPK < mhsTerkecil.IPK {
+			mhsTerkecil = array[i]
+			idxDitemukan = i
+		}
+	}
+	return mhsTerkecil, idxDitemukan
+}
+
+func main() {
+	var arrMhs arrMahasiswa
+	var i, j int
+	for i = 0; i < len(arrMhs); i++ {
+		fmt.Println("DATA MAHASISWA INDEKS KE-", i)
+		fmt.Print("Masukkan nama : ")
+		fmt.Scan(&arrMhs[i].nama)
+		fmt.Print("Masukkan NIM :")
+		fmt.Scan(&arrMhs[i].nim)
+		fmt.Print("Masukkan IPK : ")
+		fmt.Scan(&arrMhs[i].IPK)
+		fmt.Println("========================")
 	}
 
-	//operasi penghapusan data/value dengan ke Dhimas didalam map nilai
-	delete(nilai, "Dhimas")
+	fmt.Println()
+	for j = 0; j < len(arrMhs); j++ {
+		fmt.Println("DATA MAHASISWA INDEKS KE-", j)
+		fmt.Println("Nama : ", arrMhs[j].nama)
+		fmt.Println("NIM : ", arrMhs[j].nim)
+		fmt.Println("IPK : ", arrMhs[j].IPK)
+		fmt.Println("========================")
+	}
+	fmt.Println()
+
+	var mhsMaks, mhsMin mahasiswa
+	var idxMaks, idxMin int
+
+	mhsMaks, idxMaks = IPKTerbesar(arrMhs[:])
+	mhsMin, idxMin = IPKTerkecil(arrMhs[:])
+
+	fmt.Println("=== DATA IPK TERKECIL & TERBESAR MAHASISWA ===")
+	fmt.Printf("IPK Terbesar : %.2f, atas nama %s dengan NIM %s, ditemukan pada indeks ke-%d", mhsMaks.IPK, mhsMaks.nama, mhsMaks.nim, idxMaks)
+	fmt.Printf("IPK Terkecil : %.2f, atas nama %s dengan NIM %s, ditemukan pada indeks ke-%d", mhsMin.IPK, mhsMin.nama, mhsMin.nim, idxMin)
 }
