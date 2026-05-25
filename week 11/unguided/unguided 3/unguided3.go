@@ -1,9 +1,7 @@
 package main
-
 import "fmt"
 
 const NMAX = 1000000
-
 var data [NMAX]int
 
 func main() {
