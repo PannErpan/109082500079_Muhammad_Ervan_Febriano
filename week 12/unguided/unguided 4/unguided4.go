@@ -2,56 +2,109 @@ package main
 
 import "fmt"
 
-func insertionSort(arr []int, n int) {
-	var i, j, key int
-	for i = 1; i < n; i++ {
-		key = arr[i]
-		j = i - 1
+const NMAX = 100
 
-		for j >= 0 && arr[j] > key {
-			arr[j+1] = arr[j]
-			j--
-		}
-		arr[j+1] = key
+type Buku struct {
+	judul     string
+	penulis   string
+	penerbit  string
+	tahun     int
+	eksemplar int
+	rating    int
+}
+
+type DaftarBuku [NMAX]Buku
+
+func DaftarkanBuku(pustaka *DaftarBuku, n int) {
+	for i := 0; i < n; i++ {
+		fmt.Scan(&pustaka[i].judul,
+			&pustaka[i].penulis,
+			&pustaka[i].penerbit,
+			&pustaka[i].tahun,
+			&pustaka[i].eksemplar,
+			&pustaka[i].rating)
 	}
 }
 
-func cekJarak(arr []int, n int) {
-	if n <= 1 {
-		fmt.Println("Data berjarak 0")
-		return
-	}
+func CetakTerfavorit(pustaka DaftarBuku, n int) {
+	max := pustaka[0]
 
-	selisih := arr[1] - arr[0]
-
-	for i := 2; i < n; i++ {
-		if arr[i]-arr[i-1] != selisih {
-			fmt.Println("Data berjarak tidak tetap")
-			return
+	for i := 1; i < n; i++ {
+		if pustaka[i].rating > max.rating {
+			max = pustaka[i]
 		}
 	}
 
-	fmt.Printf("Data berjarak %d\n", selisih)
+	fmt.Println(max.judul, max.penulis, max.penerbit, max.tahun)
+}
+
+func UrutBuku(pustaka *DaftarBuku, n int) {
+	var temp Buku
+	var j int
+
+	for i := 1; i < n; i++ {
+		temp = pustaka[i]
+		j = i - 1
+
+		for j >= 0 && pustaka[j].rating < temp.rating {
+			pustaka[j+1] = pustaka[j]
+			j--
+		}
+
+		pustaka[j+1] = temp
+	}
+}
+
+func Cetak5Terbaru(pustaka DaftarBuku, n int) {
+	batas := 5
+	if n < 5 {
+		batas = n
+	}
+
+	for i := 0; i < batas; i++ {
+		fmt.Println(pustaka[i].judul)
+	}
+}
+
+func CariBuku(pustaka DaftarBuku, n, r int) {
+	kiri := 0
+	kanan := n - 1
+	var tengah int
+
+	for kiri <= kanan {
+		tengah = (kiri + kanan) / 2
+
+		if pustaka[tengah].rating == r {
+			fmt.Println(
+				pustaka[tengah].judul,
+				pustaka[tengah].penulis,
+				pustaka[tengah].penerbit,
+				pustaka[tengah].tahun,
+				pustaka[tengah].eksemplar,
+				pustaka[tengah].rating)
+			return
+		} else if r > pustaka[tengah].rating {
+			kanan = tengah - 1
+		} else {
+			kiri = tengah + 1
+		}
+	}
+
+	fmt.Println("Tidak ada buku dengan rating seperti itu")
 }
 
 func main() {
-	var arr [100]int
-	var x, n int
+	var pustaka DaftarBuku
+	var n, r int
 
-	for {
-		fmt.Scan(&x)
-		if x < 0 {
-			break
-		}
-		arr[n] = x
-		n++
-	}
+	fmt.Scan(&n)
 
-	insertionSort(arr[:], n)
+	DaftarkanBuku(&pustaka, n)
+	CetakTerfavorit(pustaka, n)
 
-	for i := 0; i < n; i++ {
-		fmt.Print(arr[i], " ")
-	}
-	fmt.Println()
-	cekJarak(arr[:], n)
+	UrutBuku(&pustaka, n)
+	Cetak5Terbaru(pustaka, n)
+
+	fmt.Scan(&r)
+	CariBuku(pustaka, n, r)
 }
